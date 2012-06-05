@@ -1,0 +1,41 @@
+#!/bin/python
+
+#MAC3114
+#Project 1
+
+#import numpy
+
+#function ref
+
+
+
+def reff(m, eps = 1.0/(10**10)):
+  rownum, columnnum = (len(m),len(m[0]))
+  for y in range(0,rownum):
+    lastrow = y
+    for y2 in range(y+1, rownum):    # Find max pivot
+      if abs(m[y2][y]) > abs(m[lastrow][y]):
+        lastrow = y2
+    (m[y], m[lastrow]) = (m[lastrow], m[y])
+    if abs(m[y][y]) <= eps:     # Singular?
+      return False
+    for y2 in range(y+1, rownum):    # Eliminate column y
+      c = m[y2][y] / m[y][y]
+      for x in range(y, columnnum):
+        m[y2][x] -= m[y][x] * c
+  for y in range(rownum-1, 0-1, -1): # Backsubstitute
+    c  = m[y][y]
+    for y2 in range(0,y):
+      for x in range(columnnum-1, y-1, -1):
+        m[y2][x] -=  m[y][x] * m[y2][y] / c
+    m[y][y] /= c
+    for x in range(rownum, columnnum):       # Normalize row y
+      m[y][x] /= c
+  return True
+
+
+
+p1 = [[1, 2, -1, -4],[2, 3, -1, -11],[-2, 0, -3, 22]]
+print p1
+reff(p1)
+print p1
