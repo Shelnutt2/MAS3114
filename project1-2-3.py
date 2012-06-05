@@ -8,13 +8,14 @@
 #Released under the GPL v3 or later
 
 import argparse
+import numpy  
 
 # Argument parser to parse user unput
 parser = argparse.ArgumentParser(description='This is a program to draw a 2d plane based on a set of vectors.')
 parser.add_argument('--version', '-v', action='version', version='%(prog)s 0.5')
 parser.add_argument('Rows', metavar='Rows', type=eval, nargs='+', help='Rows of the matrix')
-parser.add_argument('-s', '--solve', action='store', type=bool, metavar='solve', help='Solve for variables')
-parser.add_argument('-r', '--reduce', action='store', type=bool, metavar='reduce', help='reduce to reduced row echlon form')
+parser.add_argument('-s', '--solve', action='store_true', dest='solve', help='Solve for variables')
+parser.add_argument('-r', '--reduce', action='store_true', dest='reduce', help='reduce to reduced row echlon form')
 
 #initialize the arguments
 args = parser.parse_args()
@@ -26,7 +27,6 @@ if not len(args.Rows) == 2:
 def ref( M ):
    for rnum in range(len(M)) :
       if M[rnum][rnum] == 0 :
-	     #rnump = 0
          if rnum +1 <= len(M) :
 		    rnump = rnum+1
          else:
@@ -35,17 +35,13 @@ def ref( M ):
          M[rnum] = M[rnump]
          M[rnump] = mtemp
       if not M[rnum][rnum] == 0:
-         print M[rnum]
-         print M[rnum][rnum]
-         number = M[rnum][rnum]
-         print number
-         M[rnum] = [ mrow/number for mrow in M[rnum] ]
-      for nrnum in range(len(M)-1):
-         if not M[nrnum+1][rnum] == 0:
-            var2 = M[nrnum+1][rnum]
-            #var3 = M[rnum]
-            for digit in range(len(M[rnum+1])-1):
-               M[nrnum+1][digit] = [M[nrnum+1][digit] - var2*M[rnum][digit]]
+         M[rnum] = M[rnum]/M[rnum][rnum]
+      if not rnum == len(M)-1:
+         for nrnum in range(len(M)-1):
+            if not M[nrnum+1][rnum] == 0:
+		       M[nrnum+1] = M[nrnum+1]-M[nrnum+1][rnum]*M[rnum]
+   return M
+
 	
 def rref( M ):
     if not M: return
@@ -71,12 +67,45 @@ def rref( M ):
                 lv = M[i][lead]
                 M[i] = [ iv - lv*rv for rv,iv in zip(M[r],M[i])]
         lead += 1
-
-
+    return M
+    
+def rreff2(m, eps = 1.0/(10**10)):
+  rownum, columnnum = (len(m),len(m[0]))
+  for y in range(0,rownum):
+    lastrow = y
+    for y2 in range(y+1, rownum):    # Find max pivot
+      if abs(m[y2][y]) > abs(m[lastrow][y]):
+        lastrow = y2
+    (m[y], m[lastrow]) = (m[lastrow], m[y])
+    if abs(m[y][y]) <= eps:     # Singular?
+      return False
+    for y2 in range(y+1, rownum):    # Eliminate column y
+      c = m[y2][y] / m[y][y]
+      for x in range(y, columnnum):
+        m[y2][x] -= m[y][x] * c
+  for y in range(rownum-1, 0-1, -1): # Backsubstitute
+    c  = m[y][y]
+    for y2 in range(0,y):
+      for x in range(columnnum-1, y-1, -1):
+        m[y2][x] -=  m[y][x] * m[y2][y] / c
+    m[y][y] /= c
+    for x in range(rownum, columnnum):       # Normalize row y
+      m[y][x] /= c
+  return m
+ 
+ 
+narray = numpy.array(args.Rows)
+narray = narray.astype(numpy.float)
  
 if(args.solve):
-  p=1#solve functions
+  vars = rreff2(narray)
+  print("x = " + str(narray[0][2]))
+  print("y = " + str(narray[1][2]))
+  
 elif args.reduce:
-   rref(args.Rows)
+   print(rreff2(narray))
+   #print(rreff2(args.Rows))
+   
 else:
-   ref(args.Rows)
+   print(ref(narray))
+   #print(ref(array(args.Rows)))
