@@ -25,25 +25,25 @@ if not len(args.Rows) == 2:
     parser.error("Please input atleast two rows")
 
 def ref( M ):
-   for rnum in range(len(M)) :
-      if M[rnum][rnum] == 0 :
-         if rnum +1 <= len(M) :
+   for rnum in range(len(M)) : #iterate through the rows
+      if M[rnum][rnum] == 0 : #if the rows are zero we need to swap rows
+         if rnum +1 <= len(M) : #Only swap if it's not the last row
 		    rnump = rnum+1
          else:
 		    rnump = rnum
          mtemp = M[rnum]
          M[rnum] = M[rnump]
          M[rnump] = mtemp
-      if not M[rnum][rnum] == 0:
+      if not M[rnum][rnum] == 0: #If the pivot position isn't zero we make it 1.
          M[rnum] = M[rnum]/M[rnum][rnum]
       if not rnum == len(M)-1:
          for nrnum in range(len(M)-1):
             if not M[nrnum+1][rnum] == 0:
-		       M[nrnum+1] = M[nrnum+1]-M[nrnum+1][rnum]*M[rnum]
+		       M[nrnum+1] = M[nrnum+1]-M[nrnum+1][rnum]*M[rnum] #make all rows have zeros in the pivot positions
    return M
 
 	
-def rref( M ):
+def rref( M ): #Secondary rref code.
     if not M: return
     lead = 0
     rowCount = len(M)
@@ -104,8 +104,6 @@ if(args.solve):
   
 elif args.reduce:
    print(rreff2(narray))
-   #print(rreff2(args.Rows))
    
 else:
    print(ref(narray))
-   #print(ref(array(args.Rows)))

@@ -3,3 +3,9 @@ All code in this repository is released under the GPL v3 or later.
 
 
 The main dependecies are python 2.7, numpy, and matplotlib.
+
+http://www.python.org/getit/releases/2.7/
+
+http://sourceforge.net/projects/numpy/files/NumPy/1.6.2/
+
+http://sourceforge.net/projects/matplotlib/files/matplotlib/matplotlib-1.1.1/
