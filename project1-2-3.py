@@ -21,7 +21,7 @@ parser.add_argument('-r', '--reduce', action='store_true', dest='reduce', help='
 args = parser.parse_args()
 
 #Check to make sure only two vectors are inputed
-if not len(args.Rows) == 2:
+if not len(args.Rows) >= 2:
     parser.error("Please input atleast two rows")
 
 def ref( M ):
@@ -43,14 +43,14 @@ def ref( M ):
    return M
 
 	
-def rref( M ): #Secondary rref code.
-    if not M: return
+def rref( M ): #Secondary rref code. More percise but less accurate due to expecting zero.
+    if not M[1][1]: return
     lead = 0
     rowCount = len(M)
     columnCount = len(M[0])
     for r in range(rowCount):
         if lead >= columnCount:
-            return
+            return "you matrix has more rows than columns!"
         i = r
         while M[i][lead] == 0:
             i += 1
@@ -69,15 +69,15 @@ def rref( M ): #Secondary rref code.
         lead += 1
     return M
     
-def rreff2(m, eps = 1.0/(10**10)):
-  rownum, columnnum = (len(m),len(m[0]))
-  for y in range(0,rownum):
-    lastrow = y
+def rreff2(m, eps = 1.0/(10**10)):  #eps refers to how close to zero do we consider zero? 10^10 seems close enough
+  rownum, columnnum = (len(m),len(m[0])) #Get dimension of matrix
+  for y in range(0,rownum):  #Parse through each row
+    lastrow = y              #Keep track of previous row
     for y2 in range(y+1, rownum):    # Find max pivot
       if abs(m[y2][y]) > abs(m[lastrow][y]):
         lastrow = y2
     (m[y], m[lastrow]) = (m[lastrow], m[y])
-    if abs(m[y][y]) <= eps:     # Singular?
+    if abs(m[y][y]) <= eps:     # Singular? Again we use eps because with floating points chances are we'll rarely actually get zero
       return False
     for y2 in range(y+1, rownum):    # Eliminate column y
       c = m[y2][y] / m[y][y]
@@ -91,19 +91,19 @@ def rreff2(m, eps = 1.0/(10**10)):
     m[y][y] /= c
     for x in range(rownum, columnnum):       # Normalize row y
       m[y][x] /= c
-  return m
+  return m    #Return the final matrix
  
  
-narray = numpy.array(args.Rows)
-narray = narray.astype(numpy.float)
+narray = numpy.array(args.Rows)  #convert python list, to numpy array
+narray = narray.astype(numpy.float) #Set array type to floating point
  
-if(args.solve):
-  vars = rreff2(narray)
-  print("x = " + str(narray[0][2]))
-  print("y = " + str(narray[1][2]))
+if(args.solve): #Outputs the answer in a nice format.
+  vars2d = rreff2(narray)  
+  print("x = " + str(vars2d[0][2]))
+  print("y = " + str(vars2d[1][2]))
   
-elif args.reduce:
+elif args.reduce: #If reduce flag is thrown we put it in reduced row echlon form
    print(rreff2(narray))
    
-else:
+else:  #If nothing else we put it into row echlon form.
    print(ref(narray))
