@@ -11,11 +11,11 @@ import argparse
 import numpy  
 
 # Argument parser to parse user unput
-parser = argparse.ArgumentParser(description='This is a program to draw a 2d plane based on a set of vectors.')
+parser = argparse.ArgumentParser(description='This is a program take input rows of a matrix and solve to (reduced) row echelon form.')
 parser.add_argument('--version', '-v', action='version', version='%(prog)s 0.5')
 parser.add_argument('Rows', metavar='Rows', type=eval, nargs='+', help='Rows of the matrix')
 parser.add_argument('-s', '--solve', action='store_true', dest='solve', help='Solve for variables')
-parser.add_argument('-r', '--reduce', action='store_true', dest='reduce', help='reduce to reduced row echlon form')
+parser.add_argument('-r', '--reduce', action='store_true', dest='reduce', help='reduce to reduced row echelon form')
 
 #initialize the arguments
 args = parser.parse_args()
@@ -102,8 +102,8 @@ if(args.solve): #Outputs the answer in a nice format.
   print("x = " + str(vars2d[0][2]))
   print("y = " + str(vars2d[1][2]))
   
-elif args.reduce: #If reduce flag is thrown we put it in reduced row echlon form
+elif args.reduce: #If reduce flag is thrown we put it in reduced row echelon form
    print(rreff2(narray))
    
-else:  #If nothing else we put it into row echlon form.
+else:  #If nothing else we put it into row echelon form.
    print(ref(narray))
