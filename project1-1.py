@@ -47,11 +47,11 @@ print("z: " + str(z))
  
 figure = pyplot.figure( 0 ) # Initialize out 3d plot
 ax = axes3d.Axes3D( figure ) 
-x = numpy.array( [ [ t ] * m for t in x ] ) # create out vectors of correct dimensions here
+x = numpy.array( [ [ t ] * m for t in x ] ) # create output vectors of correct dimensions here
 y = numpy.array( [ y ] * n )
 z = numpy.array( [ z ] * o )
 
-wire = ax.plot_surface( x, y, z ) #  se the plot to surface type
+wire = ax.plot_surface( x, y, z,rstride=1, cstride=1 ) #  set the plot to surface type
 figure.show() #show surface
 pyplot.show() #show entire plot
 
