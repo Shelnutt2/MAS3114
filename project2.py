@@ -34,7 +34,7 @@ def invertible( M ):
       return True
 
 def cramer_inverse( M ):
-   if invertable(M):
+   if invertible(M):
       adjM = numpy.array([],float)
       for r in range(len(M)):
          for c in range(len(M[r])):
